@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Task Tracker</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<main>
+    <header><p class="eyebrow">DEVOPS CIA 2</p><span class="version" th:text="'v' + ${version}">v1.0.0</span></header>
+    <h1>A little progress,<br>every day.</h1>
+    <p class="intro">Keep track of what matters. Add a task and take the next step.</p>
+    <section class="panel" aria-labelledby="task-heading">
+        <div class="section-heading"><h2 id="task-heading">Your tasks</h2><span th:text="${completedCount} + ' / ' + ${tasks.size()} + ' complete'"></span></div>
+        <form class="add-form" th:action="@{/tasks}" th:object="${taskForm}" method="post">
+            <label for="title">What needs to get done?</label>
+            <div class="input-row"><input id="title" th:field="*{title}" maxlength="120" required placeholder="e.g. Write my first unit test" aria-describedby="title-error"><button type="submit">Add task</button></div>
+            <p id="title-error" class="error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
+        </form>
+        <div class="empty" th:if="${tasks.isEmpty()}"><strong>A fresh start.</strong><p>Add your first task above.</p></div>
+        <ul class="tasks" th:unless="${tasks.isEmpty()}">
+            <li th:each="task : ${tasks}" th:classappend="${task.completed()} ? 'done' : ''">
+                <div class="task-text"><span class="status" th:text="${task.completed()} ? 'DONE' : 'TO DO'"></span><span class="title" th:text="${task.title()}"></span></div>
+                <div class="actions">
+                    <form th:unless="${task.completed()}" th:action="@{/tasks/{id}/complete(id=${task.id()})}" method="post"><button class="secondary" type="submit" th:aria-label="'Complete task: ' + ${task.title()}">Complete</button></form>
+                    <form th:action="@{/tasks/{id}/delete(id=${task.id()})}" method="post"><button class="delete" type="submit" th:aria-label="'Delete task: ' + ${task.title()}">Delete</button></form>
+                </div>
+            </li>
+        </ul>
+    </section>
+    <footer>Learning build by build. <span>Demo storage: tasks reset when the app restarts.</span></footer>
+</main>
+</body>
+</html>

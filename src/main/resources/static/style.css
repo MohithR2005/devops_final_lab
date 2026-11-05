@@ -1,0 +1,32 @@
+:root { font-family: 'Segoe UI', sans-serif; color: #20372e; background: #f4f5ef; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+main { max-width: 900px; margin: auto; padding: 48px 24px; }
+header, .section-heading, .input-row, .actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.eyebrow { font-size: 12px; letter-spacing: 3px; font-weight: 700; }
+.version { border: 1px solid #ccd5c9; border-radius: 20px; padding: 6px 12px; font-size: 13px; }
+h1 { font-size: clamp(36px, 6vw, 60px); line-height: 1.08; letter-spacing: -2px; margin: 48px 0 18px; }
+.intro { color: #54665c; line-height: 1.6; margin-bottom: 36px; }
+.panel { background: white; border: 1px solid #dfe5da; border-radius: 18px; padding: 28px; }
+h2 { font-size: 22px; margin: 0; }
+.section-heading > span { font-size: 13px; color: #54665c; }
+.add-form { margin: 28px 0; }
+label { display: block; font-size: 14px; margin-bottom: 10px; font-weight: 600; }
+input { min-width: 0; flex: 1; font: inherit; border: 1px solid #aebdaf; padding: 13px; border-radius: 8px; }
+button { font: inherit; font-weight: 600; border: 0; border-radius: 8px; padding: 13px 18px; background: #24573e; color: white; cursor: pointer; }
+button:hover { filter: brightness(.9); }
+:focus-visible { outline: 3px solid #b88425; outline-offset: 3px; }
+.empty { padding: 35px 10px; text-align: center; color: #54665c; border-top: 1px solid #edf0e9; }
+.tasks { list-style: none; padding: 0; margin: 0; }
+.tasks li { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 20px 0; border-top: 1px solid #edf0e9; }
+.task-text { min-width: 0; }
+.title { display: block; overflow-wrap: anywhere; line-height: 1.5; }
+.status { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: #586c5a; }
+.done .title { text-decoration: line-through; color: #617068; }
+.secondary { color: #24573e; background: #edf3ea; }
+.delete { color: #934332; background: #fff2ed; }
+.actions button { padding: 9px 12px; font-size: 13px; }
+.error { color: #a02721; font-size: 14px; }
+footer { margin-top: 24px; font-size: 12px; line-height: 1.8; color: #54665c; }
+footer span { display: block; }
+@media (max-width: 560px) { main { padding: 24px 16px; } .panel { padding: 20px; } .input-row, .tasks li { align-items: stretch; flex-direction: column; } .actions { justify-content: flex-end; } }
