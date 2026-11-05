@@ -1,0 +1,89 @@
+---
+- name: Configure ECR authentication and deploy the application on K3s
+  hosts: app
+  become: true
+  vars:
+    image_uri: "{{ lookup('env', 'DEPLOY_IMAGE') }}"
+    registry: 656972167295.dkr.ecr.ap-southeast-2.amazonaws.com
+  tasks:
+    - name: Validate the immutable image reference
+      ansible.builtin.assert:
+        that:
+          - image_uri is match('^656972167295[.]dkr[.]ecr[.]ap-southeast-2[.]amazonaws[.]com/final-lab:[a-zA-Z0-9_.-]+$')
+    - name: Create application configuration directory
+      ansible.builtin.file:
+        path: /opt/final-lab
+        state: directory
+        mode: '0755'
+    - name: Create namespace
+      ansible.builtin.command: kubectl apply -f {{ playbook_dir }}/../k8s/namespace.yaml
+      register: namespace_result
+      changed_when: "'unchanged' not in namespace_result.stdout"
+    - name: Install ECR credential renewal script
+      ansible.builtin.copy:
+        src: ../scripts/refresh-ecr.sh
+        dest: /usr/local/sbin/final-lab-refresh-ecr
+        mode: '0700'
+    - name: Install credential renewal service
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/final-lab-ecr-refresh.service
+        mode: '0644'
+        content: |
+          [Unit]
+          Description=Refresh final-lab ECR image pull credentials
+          After=network-online.target k3s.service
+          Wants=network-online.target
+          [Service]
+          Type=oneshot
+          ExecStart=/usr/local/sbin/final-lab-refresh-ecr
+          UMask=0077
+    - name: Install credential renewal timer
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/final-lab-ecr-refresh.timer
+        mode: '0644'
+        content: |
+          [Unit]
+          Description=Renew ECR credentials before their twelve hour expiry
+          [Timer]
+          OnBootSec=90s
+          OnUnitActiveSec=6h
+          Persistent=true
+          [Install]
+          WantedBy=timers.target
+    - name: Enable recurring credential renewal
+      ansible.builtin.systemd_service:
+        name: final-lab-ecr-refresh.timer
+        daemon_reload: true
+        enabled: true
+        state: started
+    - name: Refresh credentials before pulling this release
+      ansible.builtin.command: /usr/local/sbin/final-lab-refresh-ecr
+      changed_when: false
+      no_log: true
+    - name: Render the release manifest with the new image
+      ansible.builtin.copy:
+        dest: /opt/final-lab/current.yaml
+        mode: '0644'
+        content: "{{ lookup('file', '../k8s/final-lab.yaml') | regex_replace('image: [^\\n]+', 'image: ' + image_uri) }}\n"
+    - name: Apply the release
+      ansible.builtin.command: kubectl apply -f /opt/final-lab/current.yaml
+      register: apply_result
+      changed_when: "'configured' in apply_result.stdout or 'created' in apply_result.stdout"
+    - name: Wait until the deployment is available
+      ansible.builtin.command: kubectl rollout status deployment/final-lab -n final-lab --timeout=300s
+      changed_when: false
+    - name: Verify the application through Traefik
+      ansible.builtin.uri:
+        url: http://127.0.0.1/actuator/health
+        return_content: true
+      register: health
+      until: health.status == 200 and health.json.status == 'UP'
+      retries: 12
+      delay: 5
+    - name: Show deployment resources
+      ansible.builtin.command: kubectl get pods,svc,ingress -n final-lab -o wide
+      changed_when: false
+      register: resources
+    - name: Print deployment evidence
+      ansible.builtin.debug:
+        var: resources.stdout_lines

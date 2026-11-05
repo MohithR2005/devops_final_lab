@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class TaskWebTest {
     @Value("${local.server.port}") int port;
+    @Value("${app.version}") String version;
     @Autowired TaskService service;
     private final HttpClient client = HttpClient.newHttpClient();
 
@@ -26,7 +27,7 @@ class TaskWebTest {
         var home = get("/");
         assertEquals(200, home.statusCode());
         assertTrue(home.body().contains("Your tasks"));
-        assertTrue(home.body().contains("v1.0.0"));
+        assertTrue(home.body().contains("v" + version));
         assertEquals(200, get("/style.css").statusCode());
         var health = get("/actuator/health");
         assertEquals(200, health.statusCode());

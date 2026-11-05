@@ -1,0 +1,91 @@
+name: Build test and deploy final-lab
+
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['docs/**', '**/*.md']
+  workflow_dispatch:
+
+# This repository has a privileged deployment runner. Do not add pull_request
+# or pull_request_target triggers to this workflow.
+permissions:
+  contents: read
+
+concurrency:
+  group: final-lab-production
+  cancel-in-progress: false
+
+env:
+  AWS_REGION: ap-southeast-2
+  ECR_REGISTRY: 656972167295.dkr.ecr.ap-southeast-2.amazonaws.com
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Set up Java 21 and Maven cache
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - name: Compile test and package with Maven
+        run: |
+          chmod +x mvnw
+          ./mvnw -B -ntp clean verify
+      - name: Save test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ github.run_id }}-${{ github.run_attempt }}
+          path: target/surefire-reports/
+      - name: Save the tested application JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: tested-application
+          path: target/tasktracker-0.0.1-SNAPSHOT.jar
+          if-no-files-found: error
+
+  deploy:
+    needs: build-test
+    if: github.ref == 'refs/heads/main' && github.repository == 'MohithR2005/devops_final_lab'
+    runs-on: [self-hosted, Linux, X64, final-lab-deploy]
+    timeout-minutes: 20
+    steps:
+      - name: Checkout the same source revision
+        uses: actions/checkout@v4
+      - name: Download the JAR tested by this workflow run
+        uses: actions/download-artifact@v4
+        with:
+          name: tested-application
+          path: dist/
+      - name: Build and push immutable image using the EC2 role
+        run: |
+          set -euo pipefail
+          export DOCKER_CONFIG=$(mktemp -d)
+          trap 'rm -rf "$DOCKER_CONFIG"' EXIT
+          IMAGE="$ECR_REGISTRY/final-lab:${GITHUB_SHA}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          aws sts get-caller-identity
+          aws ecr get-login-password --region "$AWS_REGION" | docker login --username AWS --password-stdin "$ECR_REGISTRY"
+          cp Dockerfile.runtime dist/Dockerfile
+          docker build --platform linux/amd64 --tag "$IMAGE" dist/
+          docker push "$IMAGE"
+          echo "DEPLOY_IMAGE=$IMAGE" >> "$GITHUB_ENV"
+      - name: Configure credentials and deploy with Ansible
+        run: |
+          set -euo pipefail
+          ansible-playbook -i ansible/inventory.ini ansible/deploy.yml
+      - name: Verify website version and write deployment summary
+        run: |
+          set -euo pipefail
+          curl --fail --retry 12 --retry-delay 5 --retry-all-errors --max-time 15 http://localhost/actuator/health | python3 -c 'import json,sys; assert json.load(sys.stdin)["status"] == "UP"'
+          curl --fail --retry 6 --retry-delay 5 --retry-all-errors --max-time 15 http://localhost/ -o /tmp/final-lab-home.html
+          VERSION=$(sed -n 's/^app.version=//p' src/main/resources/application.properties | tr -d '\r')
+          grep -F "v$VERSION" /tmp/final-lab-home.html
+          printf '### Deployment verified\n- Image: `%s`\n- Version: %s\n- Commit: `%s`\n' "$DEPLOY_IMAGE" "$VERSION" "$GITHUB_SHA" >> "$GITHUB_STEP_SUMMARY"
+      - name: Remove temporary Docker build cache
+        if: always()
+        run: docker builder prune --force --filter until=24h
