@@ -1,6 +1,26 @@
 # Task Tracker
 
-A Java and Thymeleaf web application for DevOps CIA 2. The application supports local and Docker execution. CI/CD and cloud deployment will be added in later learning steps.
+A Java and Thymeleaf web application for DevOps CIA 2, with Maven tests, Docker packaging, ECR image publishing and automated K3s deployment on AWS EC2.
+
+## Submission and live demo
+
+- Live application: http://13.236.232.232 (EC2 must be running; its public IP can change after stop/start).
+- Pipeline: [GitHub Actions](https://github.com/MohithR2005/devops_final_lab/actions).
+- Start here: [Demo and viva guide](docs/DEMO-AND-VIVA.md).
+- Kubernetes configuration: [k8s](k8s/).
+- Configuration management: [Ansible playbook](ansible/deploy.yml) and [inventory](ansible/inventory.ini).
+
+## Automated delivery
+
+Push application/configuration changes to main. GitHub Actions runs `clean verify` on a hosted Java 21 runner and uploads the tested JAR and test reports. The dependent deployment job runs on the dedicated EC2 runner, builds `Dockerfile.runtime` using only that JAR, publishes a uniquely tagged image to ECR, then runs Ansible to deploy and verify it.
+
+The original multi-stage `Dockerfile` remains available for a complete local build from source. CI uses `Dockerfile.runtime` to avoid compiling twice and to keep the small cloud server's workload low.
+
+An EC2 instance role provides temporary AWS credentials. Its publishing policy is restricted to the final-lab ECR repository. GitHub OIDC provider creation was blocked by the account's organization policy, so this deployment uses a self-hosted runner. No static AWS keys or SSH private keys are stored in GitHub.
+
+Only main-branch push and manual runs deploy. Documentation-only changes do not trigger deployment. Do not add pull-request triggers to the privileged runner workflow or grant untrusted collaborators write access. The runner has Docker access and passwordless sudo, approved for this assignment server; it is not a production isolation model.
+
+Ansible installs a systemd timer to renew the ECR image-pull Secret every six hours and also renews it before deployment. Kubernetes manifests contain no credentials. The Secret is generated on the server from temporary ECR credentials.
 
 ## Run locally
 
@@ -68,13 +88,13 @@ Java source files are under src/main/java/com/mohit/tasktracker. Templates, CSS 
 
 TaskServiceTest tests validation and task lifecycle behavior. TaskWebTest starts a real HTTP server on a random port and checks rendering, form submission, validation, HTML escaping, missing tasks and health. Maven reports are in target/surefire-reports after running verify.
 
-Health endpoint: /actuator/health. Kubernetes probes can later use /actuator/health/liveness and /actuator/health/readiness.
+Health endpoint: /actuator/health. Kubernetes probes use /actuator/health/liveness and /actuator/health/readiness.
 
 ## Scope and limitations
 
 Tasks are shared by all visitors and stored only in process memory. Restarting or redeploying clears them; multiple replicas would have separate task lists. This first version has no authentication or CSRF protection and is for an assignment demo, not private or sensitive data. We must revisit persistence, replicas and access protection before treating it as a production service.
 
-Change app.version in application.properties for a visible redeployment demonstration later.
+Change app.version in application.properties and push to main for a visible redeployment demonstration. The HTTP test checks the configured version dynamically.
 
 ## Viva prompts
 

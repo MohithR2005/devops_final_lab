@@ -16,6 +16,6 @@ sudo kubectl get pods,svc,ingress -n final-lab
 
 The deployment uses one replica and Recreate to fit the t3.small server. Updates cause brief downtime and erase in-memory tasks. Traefik exposes the application over HTTP port 80. TLS and persistent storage are not configured.
 
-The image is initially pinned to tag 1.0.0. The future pipeline must render the manifest with the new image reference before applying it, rather than first applying the old tag and then changing it.
+The checked-in image is the initial tag 1.0.0. The Ansible playbook renders this manifest with the pipeline's unique image tag before applying it. Each tag contains the Git commit, workflow run ID and attempt, making releases traceable and allowing reruns with immutable ECR tags.
 
-ECR credentials expire after 12 hours. Secret renewal is still manual at this stage and must be automated for the completed pipeline. Do not commit the Secret or its credentials to Git.
+ECR credentials expire after 12 hours. Ansible installs final-lab-ecr-refresh.timer to renew them every six hours and refreshes them immediately before each deployment. Do not commit the Secret or its credentials to Git. The application remains single-replica with brief downtime during replacement.
