@@ -1,6 +1,6 @@
 # Task Tracker
 
-A Java and Thymeleaf web application for DevOps CIA 2. This is the local application stage; Docker, CI/CD and cloud deployment will be added in later learning steps.
+A Java and Thymeleaf web application for DevOps CIA 2. The application supports local and Docker execution. CI/CD and cloud deployment will be added in later learning steps.
 
 ## Run locally
 
@@ -15,6 +15,30 @@ $env:JAVA_HOME = 'C:\Program Files\Java\jdk-24'
 On this machine JAVA_HOME was pointing to JDK 17 even though `java -version` reported 24. The first line selects the installed JDK 24 for this terminal only. Run `.\mvnw.cmd -version` to check the Java version Maven actually uses. Other machines should set JAVA_HOME to their own compatible JDK location.
 
 Open http://localhost:8080. Stop the application with Ctrl+C. On Linux use `./mvnw` instead of `.\mvnw.cmd`.
+
+## Run with Docker
+
+Start Docker Desktop using Linux containers, then run these commands from this folder:
+
+```powershell
+docker build -t final-lab:1.0.0 .
+docker run -d --name final-lab -p 127.0.0.1:8081:8080 final-lab:1.0.0
+```
+
+Open http://localhost:8081. The host port is 8081 so the original local Java application can keep using 8080. The application inside the container listens on 8080. The local demo is bound to the host loopback interface.
+
+The build stage uses Java 21 and the Maven Wrapper to compile, run all tests and package the JAR. A failing test stops the image build. The runtime stage contains a Java 21 JRE and the JAR, runs as a non-root user, and does not include Maven or source code. This follows Docker's multi-stage approach: https://docs.docker.com/get-started/docker-concepts/building-images/multi-stage-builds/
+
+The .dockerignore file limits the build context to required inputs. The Dockerfile builds from source instead of copying a potentially stale JAR from the Windows target directory.
+
+```powershell
+docker logs final-lab
+curl.exe http://localhost:8081/actuator/health
+docker stop final-lab
+docker start final-lab
+```
+
+Stopping and restarting clears the in-memory tasks. To replace the container after rebuilding, stop it and run `docker rm final-lab`, then repeat the run command. Images are packaged templates; containers are running instances. `EXPOSE` documents the container port; `-p` publishes it on the host.
 
 ## Understand the request flow
 

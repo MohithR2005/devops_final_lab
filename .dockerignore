@@ -1,0 +1,10 @@
+# Only build inputs belong in the Docker context.
+**
+!pom.xml
+!mvnw
+!.mvn/
+!.mvn/**
+!src/
+!src/**
+!Dockerfile
+!.dockerignore
