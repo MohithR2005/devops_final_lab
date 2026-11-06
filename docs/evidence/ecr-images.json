@@ -1,0 +1,23 @@
+[
+  {
+    "tags": [
+      "17d23ff1b45566a2ec5442d0f50e814a57ae9f92-42073698668-1"
+    ],
+    "digest": "sha256:6d840d987fc83d9f81748bab84f36d8d6d03cb4716deec2b172e3aa3dc02f806",
+    "size_bytes": 121806180
+  },
+  {
+    "tags": [
+      "1.0.0"
+    ],
+    "digest": "sha256:406242ea110ccf2bd82c0fc15e8affa058dc38740e542829ba0bef419b4a2417",
+    "size_bytes": 121806288
+  },
+  {
+    "tags": [
+      "563ee2fff28b61a817c10de1611d4b5bf9ba58f5-42074750277-1"
+    ],
+    "digest": "sha256:75c6813c176577b101c15e2f3fa9988318b5b0cedc80daab1782e4d1efa82b21",
+    "size_bytes": 121806179
+  }
+]

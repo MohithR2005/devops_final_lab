@@ -1,0 +1,15 @@
+{
+  "InstanceId": "i-009c142441c60c7a8",
+  "InstanceType": "t3.small",
+  "PublicIpAddress": "13.236.232.232",
+  "PrivateIpAddress": "172.31.45.50",
+  "State": {
+    "Code": 16,
+    "Name": "running"
+  },
+  "IamInstanceProfile": {
+    "Arn": "arn:aws:iam::656972167295:instance-profile/final-lab-ec2-role",
+    "Id": "AIPAZR5UXXB7VZ5CCCMJQ"
+  },
+  "Architecture": "x86_64"
+}

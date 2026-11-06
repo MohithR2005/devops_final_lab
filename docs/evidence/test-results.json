@@ -1,0 +1,32 @@
+{
+  "run_id": "42074750277",
+  "suites": [
+    {
+      "name": "com.mohit.tasktracker.TaskWebTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "3.656"
+    },
+    {
+      "name": "com.mohit.tasktracker.TasktrackerApplicationTests",
+      "tests": "1",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.339"
+    },
+    {
+      "name": "com.mohit.tasktracker.service.TaskServiceTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.009"
+    }
+  ],
+  "total_tests": 9,
+  "failures": 0,
+  "errors": 0
+}

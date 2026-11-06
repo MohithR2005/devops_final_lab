@@ -1,0 +1,169 @@
+{
+  "run": {
+    "id": 42074750277,
+    "head_sha": "563ee2fff28b61a817c10de1611d4b5bf9ba58f5",
+    "status": "completed",
+    "conclusion": "success",
+    "html_url": "https://github.com/MohithR2005/devops_final_lab/actions/runs/42074750277",
+    "created_at": "2026-11-05T17:27:11Z",
+    "updated_at": "2026-11-05T17:29:12Z"
+  },
+  "jobs": [
+    {
+      "name": "build-test",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-05T17:27:13Z",
+          "completed_at": "2026-11-05T17:27:14Z"
+        },
+        {
+          "name": "Checkout source",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-05T17:27:14Z",
+          "completed_at": "2026-11-05T17:27:15Z"
+        },
+        {
+          "name": "Set up Java 21 and Maven cache",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-05T17:27:15Z",
+          "completed_at": "2026-11-05T17:27:16Z"
+        },
+        {
+          "name": "Compile test and package with Maven",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-05T17:27:16Z",
+          "completed_at": "2026-11-05T17:27:30Z"
+        },
+        {
+          "name": "Save test reports",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-05T17:27:30Z",
+          "completed_at": "2026-11-05T17:27:31Z"
+        },
+        {
+          "name": "Save the tested application JAR",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-05T17:27:31Z",
+          "completed_at": "2026-11-05T17:27:33Z"
+        },
+        {
+          "name": "Post Set up Java 21 and Maven cache",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-11-05T17:27:33Z",
+          "completed_at": "2026-11-05T17:27:34Z"
+        },
+        {
+          "name": "Post Checkout source",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-11-05T17:27:34Z",
+          "completed_at": "2026-11-05T17:27:34Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-05T17:27:34Z",
+          "completed_at": "2026-11-05T17:27:34Z"
+        }
+      ]
+    },
+    {
+      "name": "deploy",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-05T17:27:40Z",
+          "completed_at": "2026-11-05T17:27:44Z"
+        },
+        {
+          "name": "Checkout the same source revision",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-05T17:27:44Z",
+          "completed_at": "2026-11-05T17:27:46Z"
+        },
+        {
+          "name": "Download the JAR tested by this workflow run",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-05T17:27:46Z",
+          "completed_at": "2026-11-05T17:27:57Z"
+        },
+        {
+          "name": "Build and push immutable image using the EC2 role",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-05T17:27:57Z",
+          "completed_at": "2026-11-05T17:28:25Z"
+        },
+        {
+          "name": "Configure credentials and deploy with Ansible",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-05T17:28:25Z",
+          "completed_at": "2026-11-05T17:29:03Z"
+        },
+        {
+          "name": "Verify website version and write deployment summary",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-05T17:29:03Z",
+          "completed_at": "2026-11-05T17:29:05Z"
+        },
+        {
+          "name": "Remove temporary Docker build cache",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-05T17:29:05Z",
+          "completed_at": "2026-11-05T17:29:05Z"
+        },
+        {
+          "name": "Post Checkout the same source revision",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-11-05T17:29:05Z",
+          "completed_at": "2026-11-05T17:29:06Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-11-05T17:29:06Z",
+          "completed_at": "2026-11-05T17:29:06Z"
+        }
+      ]
+    }
+  ]
+}

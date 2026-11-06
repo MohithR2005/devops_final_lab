@@ -1,0 +1,27 @@
+Thu Nov  5 17:33:41 UTC 2026
+NAME              STATUS   ROLES           AGE     VERSION        INTERNAL-IP    EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION           CONTAINER-RUNTIME
+ip-172-31-45-50   Ready    control-plane   4h38m   v1.37.2+k3s1   172.31.45.50   <none>        Ubuntu 24.04.5 LTS   7.0.0-1014-aws (amd64)   containerd://2.3.7-k3s1
+NAME                             READY   STATUS    RESTARTS   AGE    IP           NODE              NOMINATED NODE   READINESS GATES
+pod/final-lab-7bfd9f6dcc-vdjz7   1/1     Running   0          5m2s   10.42.0.12   ip-172-31-45-50   <none>           <none>
+
+NAME                TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)   AGE     SELECTOR
+service/final-lab   ClusterIP   10.43.11.70   <none>        80/TCP    4h18m   app=final-lab
+
+NAME                                  CLASS     HOSTS   ADDRESS        PORTS   AGE
+ingress.networking.k8s.io/final-lab   traefik   *       172.31.45.50   80      4h18m
+656972167295.dkr.ecr.ap-southeast-2.amazonaws.com/final-lab:563ee2fff28b61a817c10de1611d4b5bf9ba58f5-42074750277-1
+NEXT                            LEFT LAST                           PASSED UNIT                        ACTIVATES
+Thu 2026-11-05 23:22:43 UTC 5h 49min Thu 2026-11-05 17:22:43 UTC 10min ago final-lab-ecr-refresh.timer final-lab-ecr-refresh.service
+
+1 timers listed.
+Pass --all to see loaded but inactive timers, too.
+enabled
+enabled
+Result=success
+ExecMainStatus=0
+{"groups":["liveness","readiness"],"status":"UP"}
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/root        19G  6.9G   12G  38% /
+               total        used        free      shared  buff/cache   available
+Mem:           1.9Gi       1.4Gi       137Mi        25Mi       567Mi       502Mi
+Swap:             0B          0B          0B
