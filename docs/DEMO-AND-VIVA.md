@@ -7,7 +7,7 @@
 ## Before the presentation
 
 1. Keep the EC2 instance running. The website and runner are services; your laptop and SSH session do not need to remain connected.
-2. Open the live website at http://13.236.232.232. Confirm the public IP in EC2 if the instance was stopped and started.
+2. Open the live website at http://13.239.8.193. Confirm the public IP in EC2 if the instance was stopped and started.
 3. Open https://github.com/MohithR2005/devops_final_lab/actions and check the last deployment is green.
 4. Open AWS in Sydney (ap-southeast-2), with the EC2 instance and ECR final-lab repository in separate tabs.
 5. For terminal evidence, use EC2 Connect > Session Manager if available. Run `sudo kubectl get nodes` and `sudo kubectl get pods,svc,ingress -n final-lab`.

@@ -5,7 +5,7 @@
 1. Repository: https://github.com/MohithR2005/devops_final_lab
 2. [Technical report](TECHNICAL-REPORT.pdf), approximately seven pages.
 3. [Evidence folder](evidence/) with screenshots, test results and deployment output.
-4. Live website: http://13.236.232.232 (check EC2's current public IP after any stop/start).
+4. Live website: http://13.239.8.193 (check EC2's current public IP after any stop/start).
 
 Use [DEMO-CHEATSHEET.pdf](DEMO-CHEATSHEET.pdf) during the presentation and [DEMO-AND-VIVA.md](DEMO-AND-VIVA.md) for the fuller viva preparation.
 

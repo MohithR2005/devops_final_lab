@@ -23,9 +23,9 @@ jobs:
           set -euo pipefail
           [[ "$RUN_ID" =~ ^[0-9]+$ ]]
           mkdir -p evidence
-          curl --fail --retry 3 --max-time 15 http://13.236.232.232/actuator/health | tee evidence/public-health.json
+          curl --fail --retry 3 --max-time 15 http://13.239.8.193/actuator/health | tee evidence/public-health.json
           python3 -c 'import json; assert json.load(open("evidence/public-health.json"))["status"] == "UP"'
-          timeout 90 google-chrome --headless --no-sandbox --disable-gpu --window-size=1440,1000 --virtual-time-budget=5000 --screenshot="$PWD/evidence/website-after.png" http://13.236.232.232 > /tmp/browser-website.log 2>&1
+          timeout 90 google-chrome --headless --no-sandbox --disable-gpu --window-size=1440,1000 --virtual-time-budget=5000 --screenshot="$PWD/evidence/website-after.png" http://13.239.8.193 > /tmp/browser-website.log 2>&1
           timeout 90 google-chrome --headless --no-sandbox --disable-gpu --window-size=1440,1000 --virtual-time-budget=10000 --screenshot="$PWD/evidence/pipeline-success.png" "https://github.com/MohithR2005/devops_final_lab/actions/runs/$RUN_ID" > /tmp/browser-pipeline.log 2>&1
           test -s evidence/website-after.png
           test -s evidence/pipeline-success.png

@@ -4,7 +4,7 @@ A Java and Thymeleaf web application for DevOps CIA 2, with Maven tests, Docker 
 
 ## Submission and live demo
 
-- Live application: http://13.236.232.232 (EC2 must be running; its public IP can change after stop/start).
+- Live application: http://13.239.8.193 (EC2 must be running; its public IP can change after stop/start).
 - Pipeline: [GitHub Actions](https://github.com/MohithR2005/devops_final_lab/actions).
 - Start here: [Demo and viva guide](docs/DEMO-AND-VIVA.md).
 - Kubernetes configuration: [k8s](k8s/).
